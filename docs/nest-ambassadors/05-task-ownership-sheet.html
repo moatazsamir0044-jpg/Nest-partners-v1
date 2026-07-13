@@ -1,0 +1,216 @@
+<meta charset="UTF-8" />
+<title>Nest Ambassadors — Department Task Ownership</title>
+<style>
+  :root{
+    --paper:#F2F4F1; --ink:#16241F; --ink-soft:#3E4A44;
+    --line:rgba(22,36,31,0.14); --line-strong:rgba(22,36,31,0.30);
+    --teal:#155457; --teal-bg:rgba(31,111,114,0.10);
+    --gold:#93691E; --gold-bg:rgba(184,134,58,0.13);
+    --clay:#A24E20; --clay-bg:rgba(193,101,46,0.12);
+    --card:#FBFAF6;
+    --display:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,serif;
+    --body:-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#0F1A16; --ink:#E9EDE8; --ink-soft:#A9B6AE;
+      --line:rgba(233,237,232,0.14); --line-strong:rgba(233,237,232,0.28);
+      --teal:#5FC2C4; --teal-bg:rgba(63,166,168,0.14);
+      --gold:#E3B168; --gold-bg:rgba(217,168,87,0.14);
+      --clay:#EB9C6C; --clay-bg:rgba(224,138,85,0.14);
+      --card:#142520;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#0F1A16; --ink:#E9EDE8; --ink-soft:#A9B6AE;
+    --line:rgba(233,237,232,0.14); --line-strong:rgba(233,237,232,0.28);
+    --teal:#5FC2C4; --teal-bg:rgba(63,166,168,0.14);
+    --gold:#E3B168; --gold-bg:rgba(217,168,87,0.14);
+    --clay:#EB9C6C; --clay-bg:rgba(224,138,85,0.14);
+    --card:#142520;
+  }
+  :root[data-theme="light"]{
+    --paper:#F2F4F1; --ink:#16241F; --ink-soft:#3E4A44;
+    --line:rgba(22,36,31,0.14); --line-strong:rgba(22,36,31,0.30);
+    --teal:#155457; --teal-bg:rgba(31,111,114,0.10);
+    --gold:#93691E; --gold-bg:rgba(184,134,58,0.13);
+    --clay:#A24E20; --clay-bg:rgba(193,101,46,0.12);
+    --card:#FBFAF6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:clamp(24px,4vw,56px)}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-soft)}
+  h1{font-family:var(--display);font-size:clamp(1.9rem,4.5vw,2.9rem);line-height:1.08;margin:10px 0 8px;text-wrap:balance}
+  h2{font-family:var(--display);font-size:1.45rem;margin:0 0 4px;text-wrap:balance}
+  .lede{color:var(--ink-soft);max-width:72ch;margin:0 0 8px}
+  .dept{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:22px 24px;margin-top:26px;break-inside:avoid}
+  .dept-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:4px}
+  .dept .mission{color:var(--ink-soft);font-size:0.93rem;margin:2px 0 14px;max-width:78ch}
+  .tag{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:3px;white-space:nowrap}
+  .tag-teal{background:var(--teal-bg);color:var(--teal)}
+  .tag-gold{background:var(--gold-bg);color:var(--gold)}
+  .tag-clay{background:var(--clay-bg);color:var(--clay)}
+  .tblwrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:0.85rem}
+  th{font-family:var(--mono);font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-soft);text-align:left;padding:8px 12px 8px 0;border-bottom:1px solid var(--line-strong)}
+  td{padding:9px 12px 9px 0;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink)}
+  td.id{font-family:var(--mono);color:var(--teal);white-space:nowrap;font-size:0.78rem}
+  td.when{font-family:var(--mono);white-space:nowrap;font-size:0.78rem;color:var(--ink-soft)}
+  td.done{color:var(--ink-soft)}
+  td.owner{min-width:110px;border-bottom:1px solid var(--line)}
+  .ownerline{display:inline-block;min-width:100px;border-bottom:1px dotted var(--line-strong);height:1em}
+  .master td, .master th{font-size:0.78rem}
+  .master td:first-child{font-family:var(--mono);white-space:nowrap;color:var(--teal)}
+  .note{background:var(--gold-bg);border-left:3px solid var(--gold);padding:14px 18px;margin-top:26px;font-size:0.9rem;break-inside:avoid}
+  .note b{color:var(--gold)}
+  ol.critpath{margin:10px 0 0;padding-left:20px;font-size:0.92rem;color:var(--ink-soft)}
+  ol.critpath li{margin-bottom:6px}
+  ol.critpath b{color:var(--ink)}
+  .footer-ask{font-family:var(--display);font-size:1.15rem;font-style:italic;border-left:3px solid var(--teal);background:var(--teal-bg);padding:16px 22px;margin-top:30px;break-inside:avoid}
+  .printbtn{position:fixed;top:16px;right:20px;background:var(--card);border:1px solid var(--line-strong);color:var(--ink-soft);font-family:var(--mono);font-size:0.7rem;padding:6px 14px;border-radius:20px;cursor:pointer}
+  .printbtn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  @media print{
+    .printbtn{display:none}
+    body{background:#fff}
+    .dept{box-shadow:none}
+  }
+</style>
+
+<button class="printbtn" onclick="window.print()" type="button">PRINT</button>
+
+<div class="wrap">
+  <div class="eyebrow">BirdNest · Internal · Confidential · July 2026</div>
+  <h1>Nest Ambassadors — Department Task Ownership</h1>
+  <p class="lede">Every task has one owning department, one deliverable, and a day on the 7-day clock. A task is done when its deliverable exists — not before. <b>In the meeting: write one name in every Owner column, take the three Phase-0 decisions, confirm Day 1.</b></p>
+
+  <div class="dept">
+    <div class="dept-head"><h2>Master view — who does what, when</h2><span class="tag tag-teal">All departments</span></div>
+    <div class="tblwrap master">
+      <table>
+        <thead><tr><th>Day</th><th>Leadership</th><th>Commercial Ops</th><th>Sales</th><th>Marketing</th><th>CX</th></tr></thead>
+        <tbody>
+          <tr><td>1–2</td><td>Decide commissions, CX path, name, launch date</td><td>—</td><td>Draft orientation outline</td><td>Draft branding for chosen name</td><td>—</td></tr>
+          <tr><td>3–4</td><td>Approve one-pager</td><td>Build form, sheet, codes, WhatsApp group</td><td>Orientation content + fact sheet</td><td>Form copy, toolkit, launch assets</td><td>—</td></tr>
+          <tr><td>5</td><td>Attend orientation</td><td>Distribute codes with toolkit</td><td>Deliver 45-min orientation + Q&amp;A</td><td>Distribute toolkit</td><td>Attend orientation</td></tr>
+          <tr><td>6</td><td>Send/record launch message</td><td>Final systems check</td><td>Standby for product questions</td><td>Launch announcement + First Blood teaser</td><td>—</td></tr>
+          <tr><td>7</td><td>—</td><td><b>GO LIVE:</b> validate submissions, start leaderboard</td><td>Pick up first furnishing leads</td><td>First WhatsApp broadcast</td><td>Timestamp-compliant referrals only</td></tr>
+          <tr><td>Wk 1–4</td><td>Weekly review; Week-4 scale-or-kill call</td><td>Weekly reconciliation + leaderboard data</td><td>Lead follow-up + closure confirmations</td><td>Weekly momentum comms</td><td>Comply with attribution rule</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>1 · Leadership — CCO / Commercial Director</h2><span class="tag tag-gold">Decisions &amp; authority</span></div>
+    <p class="mission">Unblock the launch with three decisions, lend the programme visible authority, and own the Week-4 verdict.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>#</th><th>Task</th><th>When</th><th>Done when</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="id">L1</td><td>Set commission amounts (EGP) for both tracks, sanity-checked against paid-media cost per booking</td><td class="when">Day 1–2</td><td class="done">EGP values written into the programme one-pager</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L2</td><td>Choose CX path: Option A (timestamp) / Option B (manual audit) / Phase-1 exclusion</td><td class="when">Day 1–2</td><td class="done">Decision minuted; CX informed with rationale</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L3</td><td>Confirm final programme name + eligibility scope</td><td class="when">Day 1–2</td><td class="done">Name locked; Marketing cleared to brand assets</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L4</td><td>Greenlight Day 1 so Day 7 lands early in a week</td><td class="when">Day 1–2</td><td class="done">Launch date on all three teams' calendars</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L5</td><td>Sign off the programme one-pager (rules, commissions, integrity conditions)</td><td class="when">Day 3–4</td><td class="done">Signed one-pager shared as single source of truth</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L6</td><td>Record/send the leadership launch message (optional 60-sec phone video)</td><td class="when">Day 6</td><td class="done">Message delivered to all staff</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L7</td><td>Arbitrate disputes — decision final, stated upfront</td><td class="when">Ongoing</td><td class="done">Every dispute logged with resolution ≤48h</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">L8</td><td>Chair the Week-4 gate: scale to full season or sunset with learnings</td><td class="when">End Wk 4</td><td class="done">Scale-or-kill decision made against the gate criteria</td><td class="owner"><span class="ownerline"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>2 · Commercial Ops</h2><span class="tag tag-teal">The tracking machine</span></div>
+    <p class="mission">Build and run the tracking machine — the programme's single source of truth.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>#</th><th>Task</th><th>When</th><th>Done when</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="id">O1</td><td>Build Referral Submission Google Form (ambassador + dept dropdown, lead contact, track, "how do you know the lead", auto timestamp — no manual entry)</td><td class="when">Day 3–4</td><td class="done">Form live, tested end-to-end with a dummy submission</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O2</td><td>Set up tracking Sheet with locked columns (auto from form + ops-only status columns)</td><td class="when">Day 3–4</td><td class="done">Sheet live; one ops editor, everyone else view-only</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O3</td><td>Generate unique referral codes for all eligible staff (NEST-[initials]-01)</td><td class="when">Day 3–4</td><td class="done">Code list complete, deduplicated, ready for toolkit</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O4</td><td>Create WhatsApp Ambassadors broadcast group</td><td class="when">Day 3–4</td><td class="done">Group created with all eligible staff added</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O5</td><td>Write the validation SOP: CRM novelty check, timestamp rule, valid/duplicate/invalid statuses</td><td class="when">Day 3–4</td><td class="done">One-page SOP approved by Commercial Director</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O6</td><td>Go-live operations: validate submissions same-day, start leaderboard</td><td class="when">Day 7</td><td class="done">First submissions validated within 24h</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O7</td><td>Weekly reconciliation before each leaderboard broadcast</td><td class="when">Wk 1–4</td><td class="done">Zero unvalidated backlog older than 3 days</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O8</td><td>Log ops time per referral + every dispute and resolution (V2 evidence)</td><td class="when">Wk 1–4</td><td class="done">Ops-load and dispute log ready for the Week-4 gate</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">O9</td><td>Prepare the Week-4 gate pack: activation, validation rate, conversions, referral CPB vs. paid CPB</td><td class="when">End Wk 4</td><td class="done">Numbers in front of leadership at the gate meeting</td><td class="owner"><span class="ownerline"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>3 · Sales</h2><span class="tag tag-clay">Enable &amp; convert</span></div>
+    <p class="mission">Make every employee able to sell, then convert what they refer.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>#</th><th>Task</th><th>When</th><th>Done when</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="id">S1</td><td>Track A orientation content: portfolio (Marassi Marina, Fouka Bay), booking process, 60-second pitch, FAQ/objection guide</td><td class="when">Day 3–4</td><td class="done">Talking points ready for Day 5</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">S2</td><td>Track B orientation content: service overview, pricing/process, lead-quality criteria, handoff protocol</td><td class="when">Day 3–4</td><td class="done">Talking points ready for Day 5</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">S3</td><td>Write the one-page product fact sheet (Sahel + Furnishing) for the toolkit</td><td class="when">Day 3–4</td><td class="done">Fact sheet delivered to Marketing by end of Day 4</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">S4</td><td>Deliver the company-wide 45-min orientation + live Q&amp;A</td><td class="when">Day 5</td><td class="done">Session held; summary shared with absentees</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">S5</td><td>Follow up every validated furnishing lead within an agreed SLA</td><td class="when">Day 7 →</td><td class="done">Every accepted lead contacted ≤48h; status in sheet</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">S6</td><td>Confirm deal closures + full payment to Commercial Ops so commission can trigger</td><td class="when">Ongoing</td><td class="done">Closures logged the same week they happen</td><td class="owner"><span class="ownerline"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>4 · Marketing</h2><span class="tag tag-gold">Energy &amp; momentum</span></div>
+    <p class="mission">Create launch energy — excitement, urgency, pride — and keep momentum alive for four weeks.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>#</th><th>Task</th><th>When</th><th>Done when</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="id">M1</td><td>Brand the chosen programme name; support naming sign-off</td><td class="when">Day 1–2</td><td class="done">Lockup + tone agreed with leadership</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M2</td><td>Write the form copy with Commercial Ops</td><td class="when">Day 3–4</td><td class="done">Copy live in the form</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M3</td><td>Assemble the Ambassador Toolkit: code card, fact sheet, WhatsApp templates, form link</td><td class="when">Day 3–4</td><td class="done">Toolkit ready for Day-5 distribution</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M4</td><td>Produce launch assets: announcement email, branded WhatsApp sticker/graphic, First Blood teaser</td><td class="when">Day 5–6</td><td class="done">Launch pack approved and scheduled</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M5</td><td>Run launch day: leadership email out, graphics live, First Blood urgency on</td><td class="when">Day 6</td><td class="done">Everything published on schedule</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M6</td><td>Send the first Ambassadors WhatsApp broadcast</td><td class="when">Day 7</td><td class="done">Broadcast delivered; form link pinned</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">M7</td><td>Weekly momentum comms: leaderboard, "Did you know?" series, first-referral feature (with consent), shout-outs, countdown</td><td class="when">Wk 1–4</td><td class="done">Minimum one broadcast per week, every week</td><td class="owner"><span class="ownerline"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>5 · CX</h2><span class="tag tag-teal">Scope depends on decision L2</span></div>
+    <p class="mission">Participate fairly under the attribution rule — or understand transparently why Phase 1 excludes them.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>#</th><th>Task</th><th>When</th><th>Done when</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td class="id">C1</td><td>Attend orientation and receive the attribution-rule briefing (why the timestamp rule exists)</td><td class="when">Day 5</td><td class="done">Team briefed; questions answered in Q&amp;A</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">C2</td><td>If Option A: submit referrals <b>before</b> the contact reaches BirdNest through any channel — timestamp must predate any CRM record</td><td class="when">Day 7 →</td><td class="done">Zero handling-based claims; all claims timestamp-valid</td><td class="owner"><span class="ownerline"></span></td></tr>
+          <tr><td class="id">C3</td><td>Flag attribution edge cases to Commercial Ops instead of disputing after the fact</td><td class="when">Ongoing</td><td class="done">Edge cases raised proactively, not retroactively</td><td class="owner"><span class="ownerline"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Recommended additions — confirm in the meeting:</b><br>
+    <b>Finance/payroll:</b> confirm the payout mechanism (payroll add-on vs. separate transfer), tax treatment, and the budget line for commissions and bonuses — Track B pays on closure, so the first payout could land within weeks, and nothing kills trust faster than a late first commission.<br>
+    <b>HR/People:</b> provide the definitive eligible-employee list (needed for codes O3 and the WhatsApp group O4) and add the programme to new-joiner onboarding.
+  </div>
+
+  <div class="dept">
+    <div class="dept-head"><h2>Cross-department dependencies — the critical path</h2></div>
+    <ol class="critpath">
+      <li><b>L1–L4 block everything.</b> No commissions, no CX decision, no date → no materials, no SOP, no launch.</li>
+      <li><b>O3 (codes) needs HR's staff list</b> → feeds M3 (toolkit) → feeds Day-5 distribution.</li>
+      <li><b>S3 (fact sheet) feeds M3 (toolkit)</b> — Sales must deliver it by end of Day 4.</li>
+      <li><b>O5 (validation SOP) needs L2 (CX decision)</b> — form logic and eligibility comms both wait on it.</li>
+      <li><b>M5 (launch) needs L6 (leadership message)</b> — schedule the recording before Day 6, not on it.</li>
+    </ol>
+  </div>
+
+  <div class="footer-ask">Meeting output required: one name in every Owner column, the three Phase-0 decisions, and a confirmed Day 1.</div>
+</div>
