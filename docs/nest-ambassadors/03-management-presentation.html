@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Nest Ambassadors — Management Presentation</title>
+<style>
+  :root{
+    --paper: #F2F4F1;
+    --ink: #16241F;
+    --ink-soft: #3E4A44;
+    --line: rgba(22,36,31,0.14);
+    --line-strong: rgba(22,36,31,0.28);
+    --gold: #93691E;
+    --gold-bg: rgba(184,134,58,0.14);
+    --teal: #155457;
+    --teal-bg: rgba(31,111,114,0.12);
+    --clay: #A24E20;
+    --clay-bg: rgba(193,101,46,0.13);
+    --card: #FBFAF6;
+    --shadow: 0 1px 2px rgba(22,36,31,0.06), 0 8px 24px rgba(22,36,31,0.07);
+    --focus: #1F6F72;
+
+    --display: ui-serif, "Iowan Old Style", "Palatino Linotype", "URW Palladio", Georgia, serif;
+    --body: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper: #0F1A16;
+      --ink: #E9EDE8;
+      --ink-soft: #A9B6AE;
+      --line: rgba(233,237,232,0.14);
+      --line-strong: rgba(233,237,232,0.26);
+      --gold: #E3B168;
+      --gold-bg: rgba(217,168,87,0.16);
+      --teal: #5FC2C4;
+      --teal-bg: rgba(63,166,168,0.16);
+      --clay: #EB9C6C;
+      --clay-bg: rgba(224,138,85,0.16);
+      --card: #142520;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px rgba(0,0,0,0.35);
+      --focus: #5FC2C4;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #0F1A16; --ink: #E9EDE8; --ink-soft: #A9B6AE;
+    --line: rgba(233,237,232,0.14); --line-strong: rgba(233,237,232,0.26);
+    --gold: #E3B168; --gold-bg: rgba(217,168,87,0.16);
+    --teal: #5FC2C4; --teal-bg: rgba(63,166,168,0.16);
+    --clay: #EB9C6C; --clay-bg: rgba(224,138,85,0.16);
+    --card: #142520; --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px rgba(0,0,0,0.35);
+    --focus: #5FC2C4;
+  }
+  :root[data-theme="light"]{
+    --paper: #F2F4F1; --ink: #16241F; --ink-soft: #3E4A44;
+    --line: rgba(22,36,31,0.14); --line-strong: rgba(22,36,31,0.28);
+    --gold: #93691E; --gold-bg: rgba(184,134,58,0.14);
+    --teal: #155457; --teal-bg: rgba(31,111,114,0.12);
+    --clay: #A24E20; --clay-bg: rgba(193,101,46,0.13);
+    --card: #FBFAF6; --shadow: 0 1px 2px rgba(22,36,31,0.06), 0 8px 24px rgba(22,36,31,0.07);
+    --focus: #1F6F72;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0; background:var(--paper); color:var(--ink); font-family:var(--body);
+    overflow:hidden;
+  }
+  ::selection{ background:var(--teal); color:var(--paper); }
+
+  .eyebrow{
+    font-family:var(--mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  h1,h2,h3{ font-family:var(--display); font-weight:700; text-wrap:balance; margin:0; }
+  p{ margin:0; }
+
+  .deck{ position:relative; width:100%; height:100vh; }
+
+  .slide{
+    position:absolute; inset:0; display:none;
+    padding: clamp(28px, 5vw, 72px) clamp(24px, 8vw, 120px);
+    flex-direction:column; justify-content:center;
+    opacity:0;
+  }
+  .slide.active{ display:flex; opacity:1; animation: rise 420ms ease both; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .slide.active{ animation:none; } }
+
+  .slide-inner{ max-width:1180px; width:100%; margin:0 auto; }
+
+  .slide .eyebrow{ margin-bottom:10px; }
+  .slide h1{ font-size:clamp(2.2rem, 5vw, 3.6rem); line-height:1.05; }
+  .slide h2{ font-size:clamp(1.7rem, 3.4vw, 2.5rem); line-height:1.1; margin-bottom:6px; }
+  .kicker{ font-size:1.05rem; color:var(--ink-soft); max-width:64ch; margin-top:14px; line-height:1.5; }
+
+  /* ---- Title slide ---- */
+  .slide-title{ text-align:left; }
+  .slide-title .bird{ font-size:2.4rem; margin-bottom:18px; opacity:0.85; }
+  .slide-title h1{ font-size:clamp(3rem, 8vw, 5.4rem); }
+  .slide-title .accent-word{ color:var(--teal); }
+  .meta-row{ display:flex; gap:28px; margin-top:44px; flex-wrap:wrap; }
+  .meta-item{ font-family:var(--mono); font-size:0.82rem; color:var(--ink-soft); border-left:2px solid var(--line-strong); padding-left:12px; }
+  .meta-item b{ color:var(--ink); display:block; font-size:0.9rem; }
+
+  /* ---- Stat row ---- */
+  .stat-row{ display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:18px; margin-top:36px; }
+  .stat{ background:var(--card); border:1px solid var(--line); border-radius:4px; padding:20px 22px; box-shadow:var(--shadow); }
+  .stat .num{ font-family:var(--mono); font-size:2.4rem; color:var(--teal); font-variant-numeric:tabular-nums; line-height:1; }
+  .stat .label{ margin-top:8px; font-size:0.92rem; color:var(--ink-soft); }
+
+  /* ---- Two column ---- */
+  .cols2{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:28px; }
+  .cols3{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:28px; }
+  .cols4{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:28px; }
+
+  .card{ background:var(--card); border:1px solid var(--line); border-radius:4px; padding:20px 22px; box-shadow:var(--shadow); }
+  .card h3{ font-size:1.05rem; font-family:var(--body); font-weight:700; margin-bottom:8px; }
+  .card p{ font-size:0.92rem; color:var(--ink-soft); line-height:1.5; }
+  .card .tag{ font-family:var(--mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:3px; display:inline-block; margin-bottom:10px; }
+  .tag-teal{ background:var(--teal-bg); color:var(--teal); }
+  .tag-gold{ background:var(--gold-bg); color:var(--gold); }
+  .tag-clay{ background:var(--clay-bg); color:var(--clay); }
+
+  /* ---- Journey steps ---- */
+  .journey{ display:flex; gap:0; margin-top:34px; counter-reset:step; }
+  .journey .step{ flex:1; position:relative; padding:20px 16px 0 0; }
+  .journey .step:not(:last-child){ border-right:1px dashed var(--line-strong); margin-right:16px; }
+  .journey .step .n{ font-family:var(--mono); font-size:1.6rem; color:var(--teal); font-variant-numeric:tabular-nums; }
+  .journey .step h3{ font-size:0.98rem; margin:8px 0 6px; }
+  .journey .step p{ font-size:0.84rem; color:var(--ink-soft); line-height:1.45; }
+
+  /* ---- Timeline (7-day plan) ---- */
+  .timeline{ display:flex; gap:14px; margin-top:32px; }
+  .day{ flex:1; background:var(--card); border:1px solid var(--line); border-radius:4px; padding:16px 14px; box-shadow:var(--shadow); }
+  .day.golive{ border-color:var(--teal); background:var(--teal-bg); }
+  .day .dlabel{ font-family:var(--mono); font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft); }
+  .day .dtitle{ font-weight:700; font-size:0.94rem; margin:6px 0 8px; }
+  .day ul{ margin:0; padding-left:16px; font-size:0.78rem; color:var(--ink-soft); line-height:1.5; }
+  .day.golive .dtitle{ color:var(--teal); }
+
+  /* ---- Table-ish list ---- */
+  .rows{ margin-top:28px; border-top:1px solid var(--line); }
+  .row{ display:grid; grid-template-columns: 200px 1fr 1.1fr; gap:20px; padding:16px 0; border-bottom:1px solid var(--line); align-items:start; }
+  .row .rk{ font-weight:700; font-size:0.95rem; }
+  .row .rk .sub{ display:block; font-family:var(--mono); font-size:0.72rem; color:var(--ink-soft); font-weight:400; margin-top:4px; }
+  .row p{ font-size:0.88rem; color:var(--ink-soft); line-height:1.5; }
+
+  /* ---- Path / stage flow ---- */
+  .stageflow{ display:flex; align-items:stretch; gap:14px; margin-top:34px; }
+  .stage{ flex:1; background:var(--card); border:1px solid var(--line); border-radius:4px; padding:22px 20px; box-shadow:var(--shadow); position:relative; }
+  .stage .stagelabel{ font-family:var(--mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--teal); }
+  .stage h3{ font-size:1.2rem; margin:8px 0 10px; font-family:var(--display);}
+  .stage p{ font-size:0.85rem; color:var(--ink-soft); line-height:1.5; margin-bottom:6px; }
+  .stage .arrow{ position:absolute; right:-24px; top:50%; transform:translateY(-50%); font-size:1.4rem; color:var(--line-strong); z-index:2; }
+  .stage:last-child .arrow{ display:none; }
+
+  .list-check{ list-style:none; margin:22px 0 0; padding:0; display:flex; flex-direction:column; gap:12px; }
+  .list-check li{ display:flex; gap:12px; font-size:0.95rem; color:var(--ink-soft); line-height:1.5; }
+  .list-check li::before{ content:"—"; color:var(--teal); flex-shrink:0; }
+
+  blockquote{ margin:30px 0 0; padding:20px 24px; border-left:3px solid var(--teal); background:var(--teal-bg); font-family:var(--display); font-size:1.15rem; line-height:1.5; font-style:italic; }
+
+  /* ---- Nav chrome ---- */
+  .chrome{ position:fixed; bottom:0; left:0; right:0; display:flex; align-items:center; justify-content:space-between; padding:14px clamp(20px,4vw,60px); font-family:var(--mono); font-size:0.78rem; color:var(--ink-soft); z-index:10; pointer-events:none; }
+  .chrome > *{ pointer-events:auto; }
+  .progress-track{ flex:1; height:2px; background:var(--line); margin:0 24px; position:relative; border-radius:2px; overflow:hidden; }
+  .progress-fill{ position:absolute; left:0; top:0; bottom:0; background:var(--teal); transition:width 320ms ease; }
+  .navbtns{ display:flex; gap:8px; }
+  .navbtn{ background:var(--card); border:1px solid var(--line-strong); color:var(--ink); width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; }
+  .navbtn:hover{ border-color:var(--teal); color:var(--teal); }
+  .navbtn:focus-visible, .theme-toggle:focus-visible{ outline:2px solid var(--focus); outline-offset:2px; }
+  .theme-toggle{ position:fixed; top:16px; right:20px; z-index:10; background:var(--card); border:1px solid var(--line-strong); color:var(--ink-soft); font-family:var(--mono); font-size:0.7rem; padding:6px 12px; border-radius:20px; cursor:pointer; }
+
+  .footer-mark{ font-family:var(--mono); }
+
+  @media (max-width: 860px){
+    .cols2, .cols3, .cols4{ grid-template-columns:1fr; }
+    .journey{ flex-direction:column; gap:18px; }
+    .journey .step:not(:last-child){ border-right:none; border-bottom:1px dashed var(--line-strong); padding-bottom:14px; margin-right:0; }
+    .timeline{ flex-direction:column; }
+    .stageflow{ flex-direction:column; }
+    .stage .arrow{ display:none; }
+    .row{ grid-template-columns:1fr; gap:6px; }
+    body{ overflow:auto; }
+    .slide{ position:relative; display:flex !important; opacity:1 !important; min-height:100vh; }
+    .chrome{ display:none; }
+  }
+
+  @media print{
+    body{ overflow:visible; }
+    .slide{ position:relative; display:flex !important; opacity:1 !important; page-break-after:always; min-height:100vh; }
+    .chrome, .theme-toggle{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle color theme">THEME</button>
+
+<div class="deck" id="deck">
+
+  <!-- 1 — TITLE -->
+  <section class="slide active">
+    <div class="slide-inner slide-title">
+      <div class="bird">🪺</div>
+      <div class="eyebrow">BirdNest · Internal · Confidential · July 2026</div>
+      <h1>Nest <span class="accent-word">Ambassadors</span></h1>
+      <p class="kicker">Employee Referral Programme — a V1 roadmap toward a BirdNest Partner Network, presented for the Commercial Director and leadership.</p>
+      <div class="meta-row">
+        <div class="meta-item"><b>Sahel Reservations</b>Track A</div>
+        <div class="meta-item"><b>Furnishing Packages</b>Track B</div>
+        <div class="meta-item"><b>Launch Window</b>7 days from sign-off</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 — THE ASK -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">The Opportunity</div>
+      <h2>We have an untapped growth channel — our own people</h2>
+      <p class="kicker">Every employee carries a personal network of potential customers. Nest Ambassadors channels that network into measurable revenue, fast — with zero engineering spend.</p>
+      <div class="stat-row">
+        <div class="stat"><div class="num">2</div><div class="label">Revenue tracks — Sahel bookings &amp; furnishing packages</div></div>
+        <div class="stat"><div class="num">7</div><div class="label">Days from management decision to full launch</div></div>
+        <div class="stat"><div class="num">100%</div><div class="label">Of eligible staff can participate (CX handled as a special case)</div></div>
+        <div class="stat"><div class="num">0</div><div class="label">Engineering hours required — Google Form + Sheet + WhatsApp</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — THE VISION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Strategic Context</div>
+      <h2>The vision: a BirdNest Partners ecosystem</h2>
+      <p class="kicker">The CCO's direction: build a partner-driven referral engine — brokers, freelancers, property owners, eventually companies — that refers customers to BirdNest and earns commission automatically, the way <b>Nawy Partners</b> did for real estate and <b>Carofi Partners</b> did for auto finance in Egypt.</p>
+      <blockquote>First break the vision down to a goal we can hit this week — prove the model works with the people we already trust, before we build anything.</blockquote>
+    </div>
+  </section>
+
+  <!-- 4 — WHY NOT BUILD VISION FIRST -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Core Reasoning</div>
+      <h2>Why we don't build the platform first</h2>
+      <div class="cols4">
+        <div class="card"><span class="tag tag-teal">Economics</span><h3>Unknown unit economics</h3><p>We don't yet know conversion rate, cost per booking vs. paid media, or the commission that actually motivates referrers.</p></div>
+        <div class="card"><span class="tag tag-teal">Operations</span><h3>Unproven ops muscle</h3><p>Validation, disputes, payout timing, and Sales handoff have never been run. V1 builds these manually first.</p></div>
+        <div class="card"><span class="tag tag-gold">Timing</span><h3>Season pressure</h3><p>Sahel's peak window is ~90 days. A platform build misses it entirely; a form-and-sheet programme captures it.</p></div>
+        <div class="card"><span class="tag tag-clay">Risk</span><h3>Trust &amp; control</h3><p>Employees are a known, coachable referrer base — fraud and brand risk are far easier to manage while rules are stress-tested.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 — STAGED PATH -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">The Roadmap</div>
+      <h2>The staged path: V1 → V2 → V3</h2>
+      <div class="stageflow">
+        <div class="stage">
+          <div class="stagelabel">V1 — Now</div>
+          <h3>Employees</h3>
+          <p><b>Who refers:</b> BirdNest employees (Nest Ambassadors)</p>
+          <p><b>Infra:</b> Google Form + Sheet + WhatsApp + codes</p>
+          <p><b>Goal:</b> Prove conversion &amp; economics this Sahel season</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="stage">
+          <div class="stagelabel">V2 — Post-season</div>
+          <h3>Trusted circle</h3>
+          <p><b>Who refers:</b> Owners, past guests, freelancers</p>
+          <p><b>Infra:</b> Referral links, light dashboard</p>
+          <p><b>Goal:</b> Test external referrer behaviour with light tooling</p>
+          <div class="arrow">→</div>
+        </div>
+        <div class="stage">
+          <div class="stagelabel">V3 — The Vision</div>
+          <h3>Open network</h3>
+          <p><b>Who refers:</b> Brokers, agencies, ambassadors</p>
+          <p><b>Infra:</b> BirdNest Partners portal/app</p>
+          <p><b>Goal:</b> Partner network as a core acquisition channel</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 — HOW IT WORKS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Programme Overview</div>
+      <h2>Nest Ambassadors — how it works</h2>
+      <div class="cols2">
+        <div class="card">
+          <span class="tag tag-teal">Track A</span>
+          <h3>Book a Nest — Sahel Reservations</h3>
+          <p>New customer only, never booked with BirdNest. Commission on checkout confirmed + full payment + no cancellation. Paid post-season (Sept 2026).</p>
+        </div>
+        <div class="card">
+          <span class="tag tag-clay">Track B</span>
+          <h3>Furnish a Home — Furnishing Packages</h3>
+          <p>New client only, not already in Sales pipeline or CRM. Commission on deal closed + full payment received. Paid on confirmation.</p>
+        </div>
+      </div>
+      <p class="kicker" style="margin-top:26px">Both tracks: share a unique referral code or link → earn cash commission on confirmed conversions → top performers unlock bonus incentives. Employee discounts do not apply to referred deals.</p>
+    </div>
+  </section>
+
+  <!-- 7 — JOURNEY -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Mechanics</div>
+      <h2>The referral journey — simple by design</h2>
+      <div class="journey">
+        <div class="step"><div class="n">01</div><h3>Identify</h3><p>Ambassador spots a friend or contact looking to book Sahel or furnish a home.</p></div>
+        <div class="step"><div class="n">02</div><h3>Submit</h3><p>Fills the Referral Form — contact details + product track selected.</p></div>
+        <div class="step"><div class="n">03</div><h3>Validate</h3><p>Commercial ops checks the CRM — confirms the lead is new to BirdNest.</p></div>
+        <div class="step"><div class="n">04</div><h3>Follow up</h3><p>Sales takes the furnishing lead; Sahel customer books with the referral code.</p></div>
+        <div class="step"><div class="n">05</div><h3>Confirm</h3><p>Booking or deal closes and pays — commission is triggered and logged.</p></div>
+      </div>
+      <p class="kicker" style="margin-top:30px">Tracking stack — <b>zero tech build:</b> Google Form → Google Sheet log → WhatsApp broadcast group → unique referral code per employee (<span class="footer-mark">NEST-[initials]-01</span>).</p>
+    </div>
+  </section>
+
+  <!-- 8 — INCENTIVES -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Commission &amp; Incentives</div>
+      <h2>What Ambassadors earn — and how to earn more</h2>
+      <div class="rows">
+        <div class="row"><div class="rk">Base commission</div><p>Confirmed conversion on either track</p><p>Cash — amount set by management</p></div>
+        <div class="row"><div class="rk">Gold Ambassador<span class="sub">🥇 top performer</span></div><p>Most confirmed deals/bookings in the period</p><p>Premium cash bonus + "Ambassador of the Season" + featured in company comms</p></div>
+        <div class="row"><div class="rk">Silver Ambassador<span class="sub">🥈 runner-up</span></div><p>2nd highest confirmed conversions</p><p>Cash bonus + company-wide shout-out</p></div>
+        <div class="row"><div class="rk">First Blood Bonus<span class="sub">⭐ early mover</span></div><p>First to land a confirmed booking AND furnishing deal</p><p>Surprise bonus announced at launch to drive early action</p></div>
+        <div class="row"><div class="rk">Streak Bonus<span class="sub">🔥 sustained</span></div><p>3+ confirmed referrals across both tracks</p><p>Cash multiplier on 3rd+ referral commission</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — CX QUESTION -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Special Consideration</div>
+      <h2>The CX question — solved, not avoided</h2>
+      <p class="kicker">CX handles all inbound leads. Without a mechanism, agents could claim commission on any lead they touch — making the programme economically unviable. Two options:</p>
+      <div class="cols2" style="margin-top:26px">
+        <div class="card">
+          <span class="tag tag-teal">Option A — Recommended</span>
+          <h3>Pre-submission before contact</h3>
+          <p>Form timestamp must predate any CRM record of the contact. If the lead appears in CRM first, the claim is invalid. Clean, enforceable, zero tech.</p>
+        </div>
+        <div class="card">
+          <span class="tag tag-gold">Option B — Alternative</span>
+          <h3>Dedicated CX track</h3>
+          <p>Only contacts with zero prior BirdNest touchpoints; agent submits a personal note; Sales manager verifies novelty in CRM. Clear audit trail, more manual effort.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — BENCHMARKS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Benchmark Analysis</div>
+      <h2>What Nawy and Carofi teach us</h2>
+      <div class="cols2">
+        <div class="card"><h3>Nawy Partners <span style="font-family:var(--mono); font-size:0.7rem; color:var(--ink-soft)">6,500+ partner companies</span></h3><p>Free onboarding, dashboard beyond commission, express-payout speed as retention lever, contests &amp; recognition — and an internal "ambassador" mode, mirroring what BirdNest is building as V1.</p></div>
+        <div class="card"><h3>Carofi Partners <span style="font-family:var(--mono); font-size:0.7rem; color:var(--ink-soft)">auto finance, Egypt</span></h3><p>Proves the partner model generalises beyond real estate — but productised the partner experience only <i>after</i> manual commission mechanics existed.</p></div>
+      </div>
+      <ul class="list-check">
+        <li>Both companies layered a platform on top of proven manual economics — BirdNest's V1-first approach copies the sequence, not just the end state.</li>
+        <li>Explicit attribution and payout rules are non-negotiable in both — our V1 rulebook is the seed of that.</li>
+        <li>Payout speed and public recognition are cheap, proven engagement levers we're already building in.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 11 — RISKS -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Risk Management</div>
+      <h2>Risks — named and mitigated upfront</h2>
+      <div class="cols3">
+        <div class="card"><h3>Attribution disputes</h3><p>Mitigation: tracked-before-contact rule, timestamp as source of truth, Commercial Director as final arbiter.</p></div>
+        <div class="card"><h3>Post-season payout fatigue</h3><p>Mitigation: weekly "commission locked" confirmations, visible leaderboard, faster First Blood/streak payouts as morale fuel.</p></div>
+        <div class="card"><h3>Low activation</h3><p>Mitigation: leadership launch message, 45-min orientation, ready-made toolkit, First Blood urgency.</p></div>
+        <div class="card"><h3>Lead quality dilution</h3><p>Mitigation: new-customer-only validation, lead-quality criteria in training, validation rate tracked weekly.</p></div>
+        <div class="card"><h3>CX resentment</h3><p>Mitigation: transparent framing of the attribution problem + Option A as the fairness bridge.</p></div>
+        <div class="card"><h3>Sheet chaos at volume</h3><p>Mitigation: locked columns, single ops owner, weekly reconciliation — a good problem that triggers V2 tooling.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — METRICS + GATE -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Success Metrics</div>
+      <h2>How we know it's working — the Week-4 gate</h2>
+      <div class="stat-row">
+        <div class="stat"><div class="num">&gt;30%</div><div class="label">Activation rate target — employees submitting ≥1 referral in 2 weeks</div></div>
+        <div class="stat"><div class="num">CPB</div><div class="label">Referral cost per booking, benchmarked against paid-media CPB</div></div>
+        <div class="stat"><div class="num">GMV</div><div class="label">Booking value generated via the programme, assessed post-checkout</div></div>
+        <div class="stat"><div class="num">Wk 4</div><div class="label">Assessment gate: scale to full season, or sunset with documented learnings</div></div>
+      </div>
+      <p class="kicker" style="margin-top:26px">Every metric doubles as an input to the partner-platform business case: conversion rate becomes the revenue model, cost-per-booking becomes commission strategy, ops load becomes the automation backlog.</p>
+    </div>
+  </section>
+
+  <!-- 13 — 7 DAY PLAN -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Quick-Win Launch Plan</div>
+      <h2>Zero to live in 7 days</h2>
+      <div class="timeline">
+        <div class="day"><div class="dlabel">Day 1–2</div><div class="dtitle">Design &amp; approvals</div><ul><li>Finalise commissions</li><li>Agree CX mechanism</li><li>Sign off name &amp; branding</li></ul></div>
+        <div class="day"><div class="dlabel">Day 3–4</div><div class="dtitle">Infrastructure</div><ul><li>Build form + tracking sheet</li><li>Generate referral codes</li><li>Create WhatsApp group</li></ul></div>
+        <div class="day"><div class="dlabel">Day 5</div><div class="dtitle">Enablement</div><ul><li>45-min Sales orientation</li><li>Distribute toolkit</li><li>Live Q&amp;A</li></ul></div>
+        <div class="day"><div class="dlabel">Day 6</div><div class="dtitle">Internal launch</div><ul><li>Leadership announcement</li><li>Ambassador graphics</li><li>First Blood teaser</li></ul></div>
+        <div class="day golive"><div class="dlabel">Day 7</div><div class="dtitle">GO LIVE</div><ul><li>Submissions open</li><li>Leaderboard begins</li><li>First broadcast sent</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — DECISIONS NEEDED -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Next Steps</div>
+      <h2>Three decisions. One week to launch.</h2>
+      <div class="rows">
+        <div class="row"><div class="rk">01 · Commission amounts</div><p>Set EGP values for Sahel booking and furnishing deal commission.</p><p>Required before any launch materials are finalised.</p></div>
+        <div class="row"><div class="rk">02 · CX inclusion path</div><p>Approve Option A (recommended), Option B, or confirm CX exclusion for Phase 1.</p><p>Blocks eligibility comms and validation SOP.</p></div>
+        <div class="row"><div class="rk">03 · Launch date</div><p>Set Day 1 of the 7-day plan.</p><p>Commercial, Marketing and Sales align on training, build and announcement dates.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 — CLOSING -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="eyebrow">Closing</div>
+      <h2>What V1 buys us</h2>
+      <p class="kicker">One meeting, seven days, four weeks of disciplined tracking — and BirdNest either gains a new revenue channel for the season, or buys, cheaply, the exact knowledge needed to build the partner network right.</p>
+      <blockquote>Every output of V1 — conversion rate, cost per booking, dispute frequency, ops load — is a direct input to the business case for BirdNest Partners.</blockquote>
+      <div class="meta-row">
+        <div class="meta-item"><b>Ask</b>Approve Phase 0 today</div>
+        <div class="meta-item"><b>Full detail</b>Research Report &amp; Quick-Win Action Plan</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="chrome">
+  <div class="navbtns"><button class="navbtn" id="prevBtn" aria-label="Previous slide">‹</button></div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="counter">01 / 15</div>
+  <div class="navbtns"><button class="navbtn" id="nextBtn" aria-label="Next slide">›</button></div>
+</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var idx = 0;
+  var counter = document.getElementById('counter');
+  var fill = document.getElementById('progressFill');
+
+  function pad(n){ return n < 10 ? '0'+n : ''+n; }
+
+  function render(){
+    slides.forEach(function(s,i){ s.classList.toggle('active', i === idx); });
+    counter.textContent = pad(idx+1) + ' / ' + pad(slides.length);
+    fill.style.width = ((idx+1)/slides.length*100) + '%';
+  }
+  function go(delta){
+    idx = Math.max(0, Math.min(slides.length-1, idx+delta));
+    render();
+  }
+  document.getElementById('nextBtn').addEventListener('click', function(){ go(1); });
+  document.getElementById('prevBtn').addEventListener('click', function(){ go(-1); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown'){ go(1); e.preventDefault(); }
+    if(e.key === 'ArrowLeft' || e.key === 'PageUp'){ go(-1); e.preventDefault(); }
+  });
+  var touchX = null;
+  document.addEventListener('touchstart', function(e){ touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', function(e){
+    if(touchX === null) return;
+    var dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 50){ go(dx < 0 ? 1 : -1); }
+    touchX = null;
+  });
+  render();
+
+  var themeBtn = document.getElementById('themeToggle');
+  var root = document.documentElement;
+  themeBtn.addEventListener('click', function(){
+    var current = root.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var isDark = current ? current === 'dark' : prefersDark;
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  });
+</script>
+
+</body>
+</html>
